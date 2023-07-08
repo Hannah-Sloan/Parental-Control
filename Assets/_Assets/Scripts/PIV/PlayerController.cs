@@ -179,6 +179,9 @@ public class PlayerController : LevelSingleton<PlayerController>
     public int quickTurnFullSpeedDir; //-1 for left, +1 for right
     #endregion
 
+    [HideInInspector]
+    public bool throwing;
+
     private void Awake()
     {
         gameControls = new GameControls();
@@ -236,11 +239,31 @@ public class PlayerController : LevelSingleton<PlayerController>
         bool inputJumpHeld = gameControls.Game.Jump.ReadValue<float>() == 1;
         bool inputJumpStatusChanged = gameControls.Game.Jump.triggered;
 
-        if (PauseManager.Instance.IsPausedAny() || harvesting) 
+        if (PauseManager.Instance.IsPausedAny() || harvesting)
         {
             inputMoveX = 0;
             inputJumpHeld = false;
             inputJumpStatusChanged = false;
+        }
+        else if (gameControls.Game.Interact.IsPressed() && inputMoveX != 0 && Inventory.Instance.potion != null)
+        {
+            inputMoveX = 0;
+            inputJumpHeld = false;
+            inputJumpStatusChanged = false;
+
+            throwing = true;
+            Debug.Log("Throwing");
+            Thrower.Instance.Throwing();
+        }
+        else if (throwing && !gameControls.Game.Interact.IsPressed() && inputMoveX != 0 && Inventory.Instance.potion != null)
+        {
+            throwing = false;
+            Thrower.Instance.Throw();
+        }
+        else 
+        {
+            Thrower.Instance.NotThrowing();
+            throwing = false;
         }
 
         PivStepLogic(inputJumpHeld, inputMoveX, inputJumpStatusChanged);

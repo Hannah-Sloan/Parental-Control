@@ -7,7 +7,9 @@ public class PotionItemPickup : MonoBehaviour
     [SerializeField] private GameObject pickMeUp;
     [SerializeField] private ItemType itemType;
     [SerializeField] private float harvestTime;
+    [SerializeField] private float respawnTime;
     private Cooldown harvestTimeCooldown;
+    private Cooldown respawnCooldown;
 
     [HideInInspector] public bool harvested;
 
@@ -26,6 +28,7 @@ public class PotionItemPickup : MonoBehaviour
         gameControls = new GameControls();
         inRange = false;
         harvestTimeCooldown = new Cooldown(harvestTime);
+        respawnCooldown = new Cooldown(respawnTime);
         harvested = false;
     }
 
@@ -61,7 +64,7 @@ public class PotionItemPickup : MonoBehaviour
 
         if (!PauseManager.Instance.IsPausedAny() && !harvested) 
         {
-            if (!gameControls.Game.Interact.IsPressed() || !inRange) 
+            if (!gameControls.Game.Interact.IsPressed() || !inRange || PlayerController.Instance.throwing) 
             {
                 harvestTimeCooldown.Start();
                 PlayerController.Instance.HarvestEnd();
@@ -77,6 +80,9 @@ public class PotionItemPickup : MonoBehaviour
                 PlayerController.Instance.HarvestEnd();
             }
         }
+
+        if (!harvested) respawnCooldown.Start();
+        if (respawnCooldown.IsCool()) Respawn();
     }
 
     private void Harvest() 
@@ -86,5 +92,11 @@ public class PotionItemPickup : MonoBehaviour
         inRange = false;
         pickMeUp.SetActive(false);
         Inventory.Instance.AddItem(itemType);
+    }
+
+    private void Respawn() 
+    {
+        harvested = false;
+        respawnCooldown.Start();
     }
 }

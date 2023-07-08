@@ -5,6 +5,7 @@ public class Inventory : LevelSingleton<Inventory>
     public PotionItemPickup.ItemType item1;
     public PotionItemPickup.ItemType item2;
     public PotionItemPickup.ItemType item3;
+    public Potion potion;
 
     public void Clear() 
     {
