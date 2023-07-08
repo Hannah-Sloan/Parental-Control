@@ -1375,7 +1375,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pickMeUp: {fileID: 2098827994}
-  itemType: 2
+  itemType: 1
   harvestTime: 3
   harvested: 0
 --- !u!212 &254900635
@@ -7889,7 +7889,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2058486742
 Transform:
   m_ObjectHideFlags: 0

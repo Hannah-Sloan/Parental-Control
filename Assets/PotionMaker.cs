@@ -169,6 +169,6 @@ public class Potion
 
     public override string ToString()
     {
-        return "Resistance Type: " + resistanceType.ToString() + "Damage Type: " + damageType.ToString();
+        return "Resistance Type: " + resistanceType.ToString() + ". Damage Type: " + damageType.ToString();
     }
 }
