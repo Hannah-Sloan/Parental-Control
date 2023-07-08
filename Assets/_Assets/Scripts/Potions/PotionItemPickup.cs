@@ -11,6 +11,12 @@ public class PotionItemPickup : MonoBehaviour
     private Cooldown harvestTimeCooldown;
     private Cooldown respawnCooldown;
 
+    [SerializeField] private Color disabledColor;
+
+    [SerializeField] private SpriteRenderer spriteRenderer;
+
+    [SerializeField] private AnimationCurve fadeInCurve;
+
     [HideInInspector] public bool harvested;
 
     public enum ItemType 
@@ -22,6 +28,7 @@ public class PotionItemPickup : MonoBehaviour
     }
 
     private bool inRange = false;
+    public bool harvesting;
 
     private void Awake()
     {
@@ -30,6 +37,12 @@ public class PotionItemPickup : MonoBehaviour
         harvestTimeCooldown = new Cooldown(harvestTime);
         respawnCooldown = new Cooldown(respawnTime);
         harvested = false;
+        harvesting = false;
+    }
+
+    private void Start()
+    {
+        IngredientManager.Instance.Register(this);
     }
 
     private void OnEnable()
@@ -67,21 +80,25 @@ public class PotionItemPickup : MonoBehaviour
             if (!gameControls.Game.Interact.IsPressed() || !inRange || PlayerController.Instance.throwing) 
             {
                 harvestTimeCooldown.Start();
-                PlayerController.Instance.HarvestEnd();
+                harvesting = false;
             }
             else 
             {
-                PlayerController.Instance.HarvestStart();
+                harvesting = true;
             }
 
             if (gameControls.Game.Interact.IsPressed() && inRange && harvestTimeCooldown.IsCool()) 
             {
                 Harvest();
-                PlayerController.Instance.HarvestEnd();
+                harvesting = false;
             }
         }
 
         if (!harvested) respawnCooldown.Start();
+        else 
+        {
+            spriteRenderer.color = Color.Lerp(disabledColor, Color.white, respawnCooldown.NormalizedTime()); 
+        }
         if (respawnCooldown.IsCool()) Respawn();
     }
 
@@ -98,5 +115,6 @@ public class PotionItemPickup : MonoBehaviour
     {
         harvested = false;
         respawnCooldown.Start();
+        spriteRenderer.color = Color.white;
     }
 }

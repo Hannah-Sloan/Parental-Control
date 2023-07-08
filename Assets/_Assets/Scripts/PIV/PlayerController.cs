@@ -239,7 +239,7 @@ public class PlayerController : LevelSingleton<PlayerController>
         bool inputJumpHeld = gameControls.Game.Jump.ReadValue<float>() == 1;
         bool inputJumpStatusChanged = gameControls.Game.Jump.triggered;
 
-        if (PauseManager.Instance.IsPausedAny() || harvesting)
+        if (PauseManager.Instance.IsPausedAny() || IngredientManager.Instance.HarvestStatus())
         {
             inputMoveX = 0;
             inputJumpHeld = false;
@@ -527,16 +527,5 @@ public class PlayerController : LevelSingleton<PlayerController>
         Debug.DrawRay(collider.bounds.center + (transform.up * collider.bounds.extents.y), Vector2.left * (collider.bounds.extents.x + wallCheckDist), checkLeft ? Color.green : Color.red);
 
         return checkLeft;
-    }
-
-    private bool harvesting;
-
-    public void HarvestStart() 
-    {
-        harvesting = true;
-    }
-    public void HarvestEnd() 
-    {
-        harvesting = false;
     }
 }
