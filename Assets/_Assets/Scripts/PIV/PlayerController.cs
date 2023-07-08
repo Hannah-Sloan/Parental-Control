@@ -220,8 +220,6 @@ public class PlayerController : LevelSingleton<PlayerController>
 
     private void Update()
     {
-        if (PauseManager.Instance.IsPausedAny()) return;
-
         //Horizontal Movement
         rawMoveX = gameControls.Game.Move.ReadValue<float>();
             
@@ -237,6 +235,13 @@ public class PlayerController : LevelSingleton<PlayerController>
         //Vertical Movement
         bool inputJumpHeld = gameControls.Game.Jump.ReadValue<float>() == 1;
         bool inputJumpStatusChanged = gameControls.Game.Jump.triggered;
+
+        if (PauseManager.Instance.IsPausedAny() || harvesting) 
+        {
+            inputMoveX = 0;
+            inputJumpHeld = false;
+            inputJumpStatusChanged = false;
+        }
 
         PivStepLogic(inputJumpHeld, inputMoveX, inputJumpStatusChanged);
     }
@@ -499,5 +504,16 @@ public class PlayerController : LevelSingleton<PlayerController>
         Debug.DrawRay(collider.bounds.center + (transform.up * collider.bounds.extents.y), Vector2.left * (collider.bounds.extents.x + wallCheckDist), checkLeft ? Color.green : Color.red);
 
         return checkLeft;
+    }
+
+    private bool harvesting;
+
+    public void HarvestStart() 
+    {
+        harvesting = true;
+    }
+    public void HarvestEnd() 
+    {
+        harvesting = false;
     }
 }
