@@ -3,6 +3,11 @@ using UnityEngine.SceneManagement;
 
 public class SceneDirector : Singleton<SceneDirector>
 {
+    private void Start()
+    {
+        LoadMainMenu();
+    }
+
     public void LoadScene(int sceneNum) 
     {
         SceneManager.LoadScene(sceneNum);
@@ -40,7 +45,7 @@ public class SceneDirector : Singleton<SceneDirector>
         PauseManager.Instance.Unpause(PauseManager.PauseType.menu);
         PauseManager.Instance.Unpause(PauseManager.PauseType.dialogue);
         PauseManager.Instance.Unpause(PauseManager.PauseType.cutscene);
-        SceneManager.LoadScene(0, LoadSceneMode.Single);
+        SceneManager.LoadScene(1, LoadSceneMode.Single);
     }
 
     public void Quit() 
