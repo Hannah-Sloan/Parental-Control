@@ -1,3 +1,5 @@
+MADE FOR GMTK GAME JAM 2023
+
 Made by:
 
 Hannah Ava Sloan
