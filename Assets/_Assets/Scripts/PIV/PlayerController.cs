@@ -64,7 +64,7 @@ public class PlayerController : LevelSingleton<PlayerController>
     [SerializeField] private float airAccelerateSpeed; //In tiles/second^2
     [Range(10f, 100f)]
     [SerializeField] private float decelerateSpeed; //In tiles/second^2
-    [Range(10f, 100f)]
+    [Range(1f, 100f)]
     [SerializeField] private float airDecelerateSpeed; //In tiles/second^2
     [Range(0, 1)]
     [SerializeField] private float accelerationDamping;
@@ -74,13 +74,15 @@ public class PlayerController : LevelSingleton<PlayerController>
     [SerializeField] private float airAccelerationDamping;
     [Range(0, 1)]
     [SerializeField] private float airDecelerationDamping;
-    [Range(1, 10)]
+    [Range(1, 30)]
     [SerializeField] private float maxSpeed; //In tiles/second
     [Range(1, 10)]
     [SerializeField] private float airMaxSpeed; //In tiles/second
     [HideInInspector] public float maxSpeedValue;
     [Range(0, 100)]
     [SerializeField] private float groundDeceleratePastMax; //In tiles/second^2
+    [Range(0, 100)]
+    [SerializeField] private float airDeceleratePastMax; //In tiles/second^2
     [Range(0, 100)]
     [SerializeField] private float dirChangeEffeciency; //In percent
     [Range(0, 100)]
@@ -94,7 +96,7 @@ public class PlayerController : LevelSingleton<PlayerController>
     [SerializeField] private float jumpVelocity; //In tiles/second
     [Range(10, 20)]
     [SerializeField] public float maxJumpVelocity; //In tiles/second
-    [Range(1, 20)]
+    [Range(1, 40)]
     [SerializeField] private float maxAirFallSpeed; //In Tiles/second
 
     [Space(10)]
@@ -120,7 +122,7 @@ public class PlayerController : LevelSingleton<PlayerController>
 
     [Range(5, 20)]
     [SerializeField] private float wallJumpVelocity; //In tiles/second
-    [Range(0, 10)]
+    [Range(0, 30)]
     [SerializeField] private float wallJumpVerticalVelocity; //In tiles/second
     [Range(1, 20)]
     [SerializeField] private float maxWallFallSpeed; //In Tiles/second
@@ -342,6 +344,8 @@ public class PlayerController : LevelSingleton<PlayerController>
         else
             maxSpeedValue = airMaxSpeed;
 
+        float decelerationPastMaxValue = IsGrounded() ? groundDeceleratePastMax : airDeceleratePastMax;
+
         float accelerationDampingValue = IsGrounded() ? accelerationDamping : airAccelerationDamping;
 
         float decelerationDampingValue = IsGrounded() ? decelerationDamping : airDecelerationDamping;
@@ -355,17 +359,17 @@ public class PlayerController : LevelSingleton<PlayerController>
         if (moveX != 0 && !(!wallJumpChangeDirLockCooldown.IsCool() && velocitySign != moveX))
         {
             //Accelerate
-            if ((velocitySign == moveX && (velocityMagnitude <= maxSpeed || (velocityMagnitude > maxSpeed && !IsGrounded()))) || velocitySign == 0)
+            if ((velocitySign == moveX && (velocityMagnitude <= maxSpeedValue || (velocityMagnitude > maxSpeed && !IsGrounded()))) || velocitySign == 0)
             {
                 rigidbody.velocity += Vector2.right * moveX * Mathf.Min(accelerateSpeedValue * Time.deltaTime, Mathf.Clamp(maxSpeedValue - velocityMagnitude, 0, Mathf.Infinity));
                 rigidbody.velocity *= (Vector2.right * Mathf.Abs(rawMoveX) * Mathf.Pow(1 - accelerationDampingValue, Time.deltaTime)) + Vector2.up;
             }
-            else if (velocitySign == moveX && velocityMagnitude > maxSpeed && IsGrounded()) //Decelerate to maxspeed (when grounded)
+            else if (velocitySign == moveX && velocityMagnitude > maxSpeedValue/* && IsGrounded()*/) //Decelerate to maxspeed (when grounded)
             {
-                if (Mathf.Abs(groundDeceleratePastMax * Time.deltaTime) > velocityMagnitude - maxSpeed)
-                    rigidbody.velocity = new Vector2(maxSpeed * velocitySign, rigidbody.velocity.y);
+                if (Mathf.Abs(decelerationPastMaxValue * Time.deltaTime) > velocityMagnitude - maxSpeedValue)
+                    rigidbody.velocity = new Vector2(maxSpeedValue * velocitySign, rigidbody.velocity.y);
                 else
-                    rigidbody.velocity += Vector2.right * -velocitySign * groundDeceleratePastMax * Time.deltaTime;
+                    rigidbody.velocity += Vector2.right * -velocitySign * decelerationPastMaxValue * Time.deltaTime;
             }
             else if(currentlyWallJumpingCooldown.IsCool())//Change Dir
                 rigidbody.velocity = new Vector2(moveX * Mathf.Abs(rawMoveX) * (velocityMagnitude * (dirChangeEffeciencyValue / 100f)), rigidbody.velocity.y);
