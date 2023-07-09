@@ -8,7 +8,10 @@ public class PlayerController : LevelSingleton<PlayerController>
     {
         None,
         WallSlide,
-        QuickTurn
+        QuickTurn,
+        Upward,
+        Top,
+        Fall
     }
 
     [HideInInspector]
@@ -21,6 +24,7 @@ public class PlayerController : LevelSingleton<PlayerController>
     private new Rigidbody2D rigidbody;
     private new Collider2D collider;
     private GameControls gameControls;
+    [SerializeField] private CharacterAnimator animator;
 
     ContactFilter2D cf2d = new ContactFilter2D();
     Collider2D[] collider2dArray = new Collider2D[1];
@@ -129,7 +133,7 @@ public class PlayerController : LevelSingleton<PlayerController>
     [SerializeField] private float doubleJumpFixTime; //In Seconds
     [Range(0, 1)]
     [SerializeField] private float doubleWallJumpFixTime; //In Seconds
-    [Range(0, .35f)]
+    [Range(0, .65f)]
     [SerializeField] private float groundCheckDist; //In Tiles
     [Range(0, .35f)]
     [SerializeField] private float wallCheckDist; //In Tiles
@@ -276,10 +280,13 @@ public class PlayerController : LevelSingleton<PlayerController>
         jumpStatusChanged = inputJumpStatusChanged;
 
         isGroundedThisFixedUpdate = IsTouchingGround();
+
         CollisionNudging();
 
         Jumping();
         HorizontalMovement();
+
+        animator.UpdateAnimator(moveX, jumpState, isGroundedThisFixedUpdate);
     }
 
     private void CollisionNudging() 
@@ -459,14 +466,17 @@ public class PlayerController : LevelSingleton<PlayerController>
         else if (rigidbody.velocity.y < -floatVelocityRange && !IsGrounded()) //Fall hard
         {
             rigidbody.gravityScale = gravityFallMultiplier;
+            jumpState = JumpState.Fall;
         }
         else if (rigidbody.velocity.y >= -floatVelocityRange && rigidbody.velocity.y <= floatVelocityRange && jumpHeld && !IsGrounded()) //Float at top of jump
         {
             rigidbody.gravityScale = topHeightGravityMultiplier;
+            jumpState = JumpState.Upward;
         }
         else if (!IsGrounded() && !jumpHeld) //Hold jump to jump higher
         {
             rigidbody.gravityScale = lowJumpGravityMultiplier;
+            jumpState = JumpState.Upward;
         }
         else
             rigidbody.gravityScale = 1;
@@ -515,7 +525,10 @@ public class PlayerController : LevelSingleton<PlayerController>
     private bool IsTouchingWallRight() 
     {
         checkRight = Physics2D.Raycast(collider.bounds.center + (transform.up * collider.bounds.extents.y), Vector2.right, collider.bounds.extents.x + wallCheckDist, ~wallIgnoreLayer);
+        var checkRight2 = Physics2D.Raycast(collider.bounds.center, Vector2.right, collider.bounds.extents.x + wallCheckDist, ~wallIgnoreLayer);
+        checkRight = checkRight || checkRight2;
         Debug.DrawRay(collider.bounds.center + (transform.up * collider.bounds.extents.y), Vector2.right * (collider.bounds.extents.x + wallCheckDist), checkRight ? Color.green : Color.red);
+        Debug.DrawRay(collider.bounds.center, Vector2.right * (collider.bounds.extents.x + wallCheckDist), checkRight2 ? Color.green : Color.red);
 
         return checkRight;
     }
@@ -524,7 +537,10 @@ public class PlayerController : LevelSingleton<PlayerController>
     private bool IsTouchingWallLeft()
     {
         checkLeft = Physics2D.Raycast(collider.bounds.center + (transform.up * collider.bounds.extents.y), Vector2.left, collider.bounds.extents.x + wallCheckDist, ~wallIgnoreLayer);
+        var checkLeft2 = Physics2D.Raycast(collider.bounds.center, Vector2.left, collider.bounds.extents.x + wallCheckDist, ~wallIgnoreLayer);
+        checkLeft = checkLeft || checkLeft2;
         Debug.DrawRay(collider.bounds.center + (transform.up * collider.bounds.extents.y), Vector2.left * (collider.bounds.extents.x + wallCheckDist), checkLeft ? Color.green : Color.red);
+        Debug.DrawRay(collider.bounds.center, Vector2.left * (collider.bounds.extents.x + wallCheckDist), checkLeft2 ? Color.green : Color.red);
 
         return checkLeft;
     }
