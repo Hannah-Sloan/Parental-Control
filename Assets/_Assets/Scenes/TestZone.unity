@@ -4051,6 +4051,31 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 67087785}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1639303860 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5495029052022427727, guid: 8450740423fc50441b96ec226372eb5c,
+    type: 3}
+  m_PrefabInstance: {fileID: 5495029051981498548}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &1639303864
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1639303860}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: d1003dfc13e04de4b907e02c9d4ea258, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1641446242
 GameObject:
   m_ObjectHideFlags: 0
@@ -24041,10 +24066,35 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1601399533, guid: 8450740423fc50441b96ec226372eb5c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1601399533, guid: 8450740423fc50441b96ec226372eb5c, type: 3}
+      propertyPath: sprites.Array.data[0].sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2dfb1f163d4ecec438605c2064ad0723,
+        type: 3}
+    - target: {fileID: 1601399533, guid: 8450740423fc50441b96ec226372eb5c, type: 3}
+      propertyPath: sprites.Array.data[1].sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: ee1d08f55c7676645a97aafe5b47dcf3,
+        type: 3}
+    - target: {fileID: 1601399533, guid: 8450740423fc50441b96ec226372eb5c, type: 3}
+      propertyPath: sprites.Array.data[2].sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2dfb1f163d4ecec438605c2064ad0723,
+        type: 3}
+    - target: {fileID: 5495029052022427720, guid: 8450740423fc50441b96ec226372eb5c,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2dfb1f163d4ecec438605c2064ad0723,
+        type: 3}
     - target: {fileID: 5495029052890397560, guid: 8450740423fc50441b96ec226372eb5c,
         type: 3}
       propertyPath: m_Name
-      value: Piv
+      value: Mom
       objectReference: {fileID: 0}
     - target: {fileID: 5495029052890397560, guid: 8450740423fc50441b96ec226372eb5c,
         type: 3}

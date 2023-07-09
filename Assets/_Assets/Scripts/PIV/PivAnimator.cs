@@ -57,8 +57,8 @@ public class PivAnimator : MonoBehaviour
         }
 
         if(playerController.jumpStateDir == 1)
-            spriteRenderer.flipX = true;
-        else if(playerController.jumpStateDir == -1)
             spriteRenderer.flipX = false;
+        else if(playerController.jumpStateDir == -1)
+            spriteRenderer.flipX = true;
     }
 }

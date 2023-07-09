@@ -15,3 +15,9 @@ https://butterymilk.itch.io/tiny-wonder-farm-asset-pack
 
 Seasonal Tilesets - GrafxKid - Itch.io
 https://grafxkid.itch.io/seasonal-tilesets
+
+Hero Knight - Sven - Itch.io
+https://sventhole.itch.io/hero-knight
+
+Warrior-Free Animation set V1.3 - Clembod - Itch.io
+https://clembod.itch.io/warrior-free-animation-set
